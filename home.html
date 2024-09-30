@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Screen</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .ticket-row {
+            background-color: #dff0d8;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AV Ticket System</h1>
+
+    <label for="ticketDate">Select Date: </label>
+    <input type="date" id="ticketDate" name="ticketDate" onchange="loadTickets()">
+    
+    <h2>Tickets for <span id="selectedDate"></span></h2>
+
+    <table id="ticketTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Requestor</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Location</th>
+                <th>Phone</th>
+                <th>Equipment Needed</th>
+                <th>Work Order Number</th>
+            </tr>
+        </thead>
+        <tbody id="ticketBody">
+            <!-- Ticket rows will be inserted here -->
+        </tbody>
+    </table>
+
+    <br>
+
+    <a href="request.html">Create New Request</a>
+
+    <script>
+        // Store tickets as a global variable
+        let tickets = [];
+
+        function loadTickets() {
+            const selectedDate = document.getElementById('ticketDate').value;
+            document.getElementById('selectedDate').innerText = selectedDate;
+
+            const ticketBody = document.getElementById('ticketBody');
+            ticketBody.innerHTML = ''; // Clear existing rows
+
+            const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
+            filteredTickets.forEach((ticket, index) => {
+                const row = `<tr class="ticket-row">
+                    <td>${index + 1}</td>
+                    <td>${ticket.requestor}</td>
+                    <td>${ticket.date}</td>
+                    <td>${ticket.time}</td>
+                    <td>${ticket.location}</td>
+                    <td>${ticket.phone}</td>
+                    <td>${ticket.equipment}</td>
+                    <td>${ticket.workOrderNumber}</td>
+                </tr>`;
+                ticketBody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        // Load tickets from local storage
+        window.onload = function() {
+            const storedTickets = JSON.parse(localStorage.getItem('tickets'));
+            if (storedTickets) {
+                tickets = storedTickets;
+            }
+        };
+    </script>
+
+</body>
+</html>

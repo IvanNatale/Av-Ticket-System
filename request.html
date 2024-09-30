@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Creation Form</title>
+</head>
+<body>
+
+    <h1>Create New Ticket</h1>
+
+    <form id="ticketForm">
+        <label for="requestor">Requestor:</label>
+        <input type="text" id="requestor" name="requestor" required><br><br>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required><br><br>
+
+        <label for="time">Time:</label>
+        <input type="time" id="time" name="time" required><br><br>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required><br><br>
+
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required><br><br>
+
+        <label for="equipment">Equipment Needed:</label>
+        <input type="text" id="equipment" name="equipment" required><br><br>
+
+        <label for="workOrderNumber">Work Order Number:</label>
+        <input type="text" id="workOrderNumber" name="workOrderNumber" required><br><br>
+
+        <button type="submit">Submit Ticket</button>
+    </form>
+
+    <script>
+        document.getElementById('ticketForm').onsubmit = function(event) {
+            event.preventDefault();
+
+            const requestor = document.getElementById('requestor').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const location = document.getElementById('location').value;
+            const phone = document.getElementById('phone').value;
+            const equipment = document.getElementById('equipment').value;
+            const workOrderNumber = document.getElementById('workOrderNumber').value;
+
+            const newTicket = {
+                requestor,
+                date,
+                time,
+                location,
+                phone,
+                equipment,
+                workOrderNumber
+            };
+
+            let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
+            tickets.push(newTicket);
+
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+
+            // Redirect to home screen
+            window.location.href = 'home.html';
+        };
+    </script>
+
+</body>
+</html>

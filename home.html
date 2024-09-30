@@ -5,57 +5,148 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Screen</title>
     <style>
+        /* General styles for the body */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container for centering content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #4a90e2;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #4a90e2;
+            text-align: center;
+        }
+
+        /* Style for the date input */
+        input[type="date"] {
+            display: block;
+            margin: 0 auto;
+            padding: 10px;
+            border: 2px solid #4a90e2;
+            border-radius: 5px;
+            font-size: 1em;
+            background-color: #fff;
+            color: #333;
+        }
+
+        /* Table styles */
         table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 20px;
         }
+
         table, th, td {
-            border: 1px solid black;
+            border: 1px solid #ddd;
         }
+
         th, td {
-            padding: 10px;
+            padding: 15px;
             text-align: left;
         }
-        .ticket-row {
-            background-color: #dff0d8;
+
+        th {
+            background-color: #4a90e2;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e9f3fb;
+        }
+
+        /* Button styles */
+        .delete-button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+
+        /* Link style for the "Create New Request" button */
+        a {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #357abd;
         }
     </style>
 </head>
 <body>
 
-    <h1>AV Ticket System</h1>
+    <div class="container">
+        <h1>AV Ticket System</h1>
 
-    <label for="ticketDate">Select Date: </label>
-    <input type="date" id="ticketDate" name="ticketDate" onchange="loadTickets()">
-    
-    <h2>Tickets for <span id="selectedDate"></span></h2>
+        <label for="ticketDate">Select Date: </label>
+        <input type="date" id="ticketDate" name="ticketDate" onchange="loadTickets()">
+        
+        <h2>Tickets for <span id="selectedDate"></span></h2>
 
-    <table id="ticketTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Requestor</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Location</th>
-                <th>Phone</th>
-                <th>Equipment Needed</th>
-                <th>Work Order Number</th>
-            </tr>
-        </thead>
-        <tbody id="ticketBody">
-            <!-- Ticket rows will be inserted here -->
-        </tbody>
-    </table>
+        <table id="ticketTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Requestor</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Location</th>
+                    <th>Phone</th>
+                    <th>Equipment Needed</th>
+                    <th>Work Order Number</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="ticketBody">
+                <!-- Ticket rows will be inserted here -->
+            </tbody>
+        </table>
 
-    <br>
+        <br>
 
-    <a href="request.html">Create New Request</a>
+        <a href="request.html">Create New Request</a>
+    </div>
 
     <script>
         // Store tickets as a global variable
         let tickets = [];
 
+        // Function to load tickets for the selected date
         function loadTickets() {
             const selectedDate = document.getElementById('ticketDate').value;
             document.getElementById('selectedDate').innerText = selectedDate;
@@ -74,9 +165,26 @@
                     <td>${ticket.phone}</td>
                     <td>${ticket.equipment}</td>
                     <td>${ticket.workOrderNumber}</td>
+                    <td><button class="delete-button" onclick="deleteTicket(${index})">Delete</button></td>
                 </tr>`;
                 ticketBody.insertAdjacentHTML('beforeend', row);
             });
+        }
+
+        // Function to delete a ticket
+        function deleteTicket(index) {
+            // Remove ticket from the array
+            const selectedDate = document.getElementById('ticketDate').value;
+            const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
+            const ticketToDelete = filteredTickets[index];
+
+            tickets = tickets.filter(ticket => !(ticket.date === ticketToDelete.date && ticket.workOrderNumber === ticketToDelete.workOrderNumber));
+
+            // Save the updated list back to localStorage
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+
+            // Reload the tickets
+            loadTickets();
         }
 
         // Load tickets from local storage

@@ -4,35 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Request Creation Form</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #4a90e2;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"], input[type="date"], input[type="time"], input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        button {
+            display: inline-block;
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #357abd;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #4a90e2;
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Create New Ticket</h1>
+    <div class="container">
+        <h1>Create New Ticket</h1>
 
-    <form id="ticketForm">
-        <label for="requestor">Requestor:</label>
-        <input type="text" id="requestor" name="requestor" required><br><br>
+        <form id="ticketForm">
+            <label for="requestor">Requestor:</label>
+            <input type="text" id="requestor" name="requestor" required>
 
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" required><br><br>
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
 
-        <label for="time">Time:</label>
-        <input type="time" id="time" name="time" required><br><br>
+            <label for="time">Time:</label>
+            <input type="time" id="time" name="time" required>
 
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" required><br><br>
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
 
-        <label for="phone">Phone:</label>
-        <input type="tel" id="phone" name="phone" required><br><br>
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" required>
 
-        <label for="equipment">Equipment Needed:</label>
-        <input type="text" id="equipment" name="equipment" required><br><br>
+            <label for="equipment">Equipment Needed:</label>
+            <input type="text" id="equipment" name="equipment" required>
 
-        <label for="workOrderNumber">Work Order Number:</label>
-        <input type="text" id="workOrderNumber" name="workOrderNumber" required><br><br>
+            <label for="workOrderNumber">Work Order Number:</label>
+            <input type="text" id="workOrderNumber" name="workOrderNumber" required>
 
-        <button type="submit">Submit Ticket</button>
-    </form>
+            <button type="submit">Submit Ticket</button>
+        </form>
+
+        <a href="home.html">Back to Home</a>
+    </div>
 
     <script>
         document.getElementById('ticketForm').onsubmit = function(event) {

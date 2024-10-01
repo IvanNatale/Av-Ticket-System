@@ -36,7 +36,7 @@
             font-weight: bold;
         }
 
-        input[type="text"], input[type="date"], input[type="time"], input[type="tel"] {
+        input[type="text"], input[type="date"], input[type="time"], input[type="tel"], textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 20px;
@@ -83,8 +83,11 @@
             <label for="date">Date:</label>
             <input type="date" id="date" name="date" required>
 
-            <label for="time">Time:</label>
-            <input type="time" id="time" name="time" required>
+            <label for="startTime">Start Time:</label>
+            <input type="time" id="startTime" name="startTime" required>
+
+            <label for="endTime">End Time:</label>
+            <input type="time" id="endTime" name="endTime" required>
 
             <label for="location">Location:</label>
             <input type="text" id="location" name="location" required>
@@ -98,6 +101,9 @@
             <label for="workOrderNumber">Work Order Number:</label>
             <input type="text" id="workOrderNumber" name="workOrderNumber" required>
 
+            <label for="comments">Comments:</label>
+            <textarea id="comments" name="comments" rows="5"></textarea>
+
             <button type="submit">Submit Ticket</button>
         </form>
 
@@ -110,20 +116,24 @@
 
             const requestor = document.getElementById('requestor').value;
             const date = document.getElementById('date').value;
-            const time = document.getElementById('time').value;
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
             const location = document.getElementById('location').value;
             const phone = document.getElementById('phone').value;
             const equipment = document.getElementById('equipment').value;
             const workOrderNumber = document.getElementById('workOrderNumber').value;
+            const comments = document.getElementById('comments').value;
 
             const newTicket = {
                 requestor,
                 date,
-                time,
+                startTime,
+                endTime,
                 location,
                 phone,
                 equipment,
-                workOrderNumber
+                workOrderNumber,
+                comments
             };
 
             let tickets = JSON.parse(localStorage.getItem('tickets')) || [];

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Screen</title>
     <style>
-        /* General styles for the body */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f9;
@@ -14,7 +13,6 @@
             padding: 0;
         }
 
-        /* Container for centering content */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -34,7 +32,6 @@
             text-align: center;
         }
 
-        /* Style for the date input */
         input[type="date"] {
             display: block;
             margin: 0 auto;
@@ -46,7 +43,6 @@
             color: #333;
         }
 
-        /* Table styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -75,8 +71,7 @@
             background-color: #e9f3fb;
         }
 
-        /* Button styles */
-        .delete-button {
+        .delete-button, .edit-button {
             background-color: #e74c3c;
             color: white;
             border: none;
@@ -86,11 +81,18 @@
             transition: background-color 0.3s ease;
         }
 
+        .edit-button {
+            background-color: #f39c12;
+        }
+
         .delete-button:hover {
             background-color: #c0392b;
         }
 
-        /* Link style for the "Create New Request" button */
+        .edit-button:hover {
+            background-color: #d35400;
+        }
+
         a {
             display: inline-block;
             text-decoration: none;
@@ -124,11 +126,13 @@
                     <th>ID</th>
                     <th>Requestor</th>
                     <th>Date</th>
-                    <th>Time</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
                     <th>Location</th>
                     <th>Phone</th>
                     <th>Equipment Needed</th>
                     <th>Work Order Number</th>
+                    <th>Comments</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -143,7 +147,6 @@
     </div>
 
     <script>
-        // Store tickets as a global variable
         let tickets = [];
 
         // Function to load tickets for the selected date
@@ -160,12 +163,17 @@
                     <td>${index + 1}</td>
                     <td>${ticket.requestor}</td>
                     <td>${ticket.date}</td>
-                    <td>${ticket.time}</td>
+                    <td>${ticket.startTime}</td>
+                    <td>${ticket.endTime}</td>
                     <td>${ticket.location}</td>
                     <td>${ticket.phone}</td>
                     <td>${ticket.equipment}</td>
                     <td>${ticket.workOrderNumber}</td>
-                    <td><button class="delete-button" onclick="deleteTicket(${index})">Delete</button></td>
+                    <td>${ticket.comments}</td>
+                    <td>
+                        <button class="edit-button" onclick="editTicket(${index})">Edit</button>
+                        <button class="delete-button" onclick="deleteTicket(${index})">Delete</button>
+                    </td>
                 </tr>`;
                 ticketBody.insertAdjacentHTML('beforeend', row);
             });
@@ -173,18 +181,26 @@
 
         // Function to delete a ticket
         function deleteTicket(index) {
-            // Remove ticket from the array
             const selectedDate = document.getElementById('ticketDate').value;
             const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
             const ticketToDelete = filteredTickets[index];
 
             tickets = tickets.filter(ticket => !(ticket.date === ticketToDelete.date && ticket.workOrderNumber === ticketToDelete.workOrderNumber));
 
-            // Save the updated list back to localStorage
             localStorage.setItem('tickets', JSON.stringify(tickets));
 
-            // Reload the tickets
             loadTickets();
+        }
+
+        // Function to edit a ticket
+        function editTicket(index) {
+            const selectedDate = document.getElementById('ticketDate').value;
+            const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
+            const ticketToEdit = filteredTickets[index];
+
+            // Redirect to request.html with ticket details pre-filled
+            localStorage.setItem('editTicket', JSON.stringify(ticketToEdit));
+            window.location.href = 'request.html?edit=true';
         }
 
         // Load tickets from local storage
@@ -193,6 +209,12 @@
             if (storedTickets) {
                 tickets = storedTickets;
             }
+
+            // Automatically set today's date in the date picker
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('ticketDate').value = today;
+
+            loadTickets(); // Load tickets for today
         };
     </script>
 

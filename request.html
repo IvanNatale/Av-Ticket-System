@@ -74,7 +74,7 @@
 <body>
 
     <div class="container">
-        <h1>Create New Ticket</h1>
+        <h1>Create or Edit Ticket</h1>
 
         <form id="ticketForm">
             <label for="requestor">Requestor:</label>
@@ -111,6 +111,31 @@
     </div>
 
     <script>
+        let editIndex = null;
+
+        // Check if we're editing an existing ticket
+        window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isEdit = urlParams.get('edit') === 'true';
+
+            if (isEdit) {
+                // Pre-fill the form with the ticket data
+                const editTicket = JSON.parse(localStorage.getItem('editTicket'));
+                editIndex = localStorage.getItem('editIndex');
+                
+                document.getElementById('requestor').value = editTicket.requestor;
+                document.getElementById('date').value = editTicket.date;
+                document.getElementById('startTime').value = editTicket.startTime;
+                document.getElementById('endTime').value = editTicket.endTime;
+                document.getElementById('location').value = editTicket.location;
+                document.getElementById('phone').value = editTicket.phone;
+                document.getElementById('equipment').value = editTicket.equipment;
+                document.getElementById('workOrderNumber').value = editTicket.workOrderNumber;
+                document.getElementById('comments').value = editTicket.comments;
+            }
+        };
+
+        // Submit form to either update an existing ticket or create a new one
         document.getElementById('ticketForm').onsubmit = function(event) {
             event.preventDefault();
 
@@ -137,9 +162,20 @@
             };
 
             let tickets = JSON.parse(localStorage.getItem('tickets')) || [];
-            tickets.push(newTicket);
+
+            if (editIndex !== null) {
+                // Update the existing ticket
+                tickets[editIndex] = newTicket;
+            } else {
+                // Add new ticket
+                tickets.push(newTicket);
+            }
 
             localStorage.setItem('tickets', JSON.stringify(tickets));
+
+            // Clear edit index and ticket after submission
+            localStorage.removeItem('editIndex');
+            localStorage.removeItem('editTicket');
 
             // Redirect to home screen
             window.location.href = 'home.html';

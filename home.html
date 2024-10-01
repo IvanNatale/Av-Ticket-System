@@ -198,8 +198,11 @@
             const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
             const ticketToEdit = filteredTickets[index];
 
-            // Redirect to request.html with ticket details pre-filled
+            // Store the index and ticket data in localStorage
+            localStorage.setItem('editIndex', index);
             localStorage.setItem('editTicket', JSON.stringify(ticketToEdit));
+
+            // Redirect to the request page with ticket data pre-filled
             window.location.href = 'request.html?edit=true';
         }
 

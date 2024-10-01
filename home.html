@@ -32,9 +32,20 @@
             text-align: center;
         }
 
+        .date-navigation {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .arrow {
+            cursor: pointer;
+            font-size: 2em;
+            color: #4a90e2;
+            padding: 0 20px;
+            user-select: none;
+        }
+
         input[type="date"] {
-            display: block;
-            margin: 0 auto;
             padding: 10px;
             border: 2px solid #4a90e2;
             border-radius: 5px;
@@ -115,8 +126,11 @@
     <div class="container">
         <h1>AV Ticket System</h1>
 
-        <label for="ticketDate">Select Date: </label>
-        <input type="date" id="ticketDate" name="ticketDate" onchange="loadTickets()">
+        <div class="date-navigation">
+            <span class="arrow" id="prevDay">&lt;</span>
+            <input type="date" id="ticketDate" name="ticketDate" onchange="loadTickets()">
+            <span class="arrow" id="nextDay">&gt;</span>
+        </div>
         
         <h2>Tickets for <span id="selectedDate"></span></h2>
 
@@ -206,7 +220,16 @@
             window.location.href = 'request.html?edit=true';
         }
 
-        // Load tickets from local storage
+        // Function to adjust the selected date by days (backwards or forwards)
+        function adjustDate(days) {
+            const dateInput = document.getElementById('ticketDate');
+            const currentDate = new Date(dateInput.value);
+            currentDate.setDate(currentDate.getDate() + days);
+            dateInput.value = currentDate.toISOString().split('T')[0];
+            loadTickets();
+        }
+
+        // Load tickets from local storage and set up event listeners for arrows
         window.onload = function() {
             const storedTickets = JSON.parse(localStorage.getItem('tickets'));
             if (storedTickets) {
@@ -218,6 +241,10 @@
             document.getElementById('ticketDate').value = today;
 
             loadTickets(); // Load tickets for today
+
+            // Add event listeners for the left and right arrow buttons
+            document.getElementById('prevDay').addEventListener('click', () => adjustDate(-1));
+            document.getElementById('nextDay').addEventListener('click', () => adjustDate(1));
         };
     </script>
 

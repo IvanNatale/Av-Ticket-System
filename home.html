@@ -82,7 +82,7 @@
             background-color: #e9f3fb;
         }
 
-        .delete-button, .edit-button {
+        .delete-button, .edit-button, .complete-button {
             background-color: #e74c3c;
             color: white;
             border: none;
@@ -96,12 +96,25 @@
             background-color: #f39c12;
         }
 
+        .complete-button {
+            background-color: #2ecc71;
+        }
+
         .delete-button:hover {
             background-color: #c0392b;
         }
 
         .edit-button:hover {
             background-color: #d35400;
+        }
+
+        .complete-button:hover {
+            background-color: #27ae60;
+        }
+
+        .completed-row {
+            background-color: #2ecc71 !important;
+            color: white;
         }
 
         a {
@@ -173,7 +186,8 @@
 
             const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
             filteredTickets.forEach((ticket, index) => {
-                const row = `<tr class="ticket-row">
+                const rowClass = ticket.completed ? 'completed-row' : '';
+                const row = `<tr class="ticket-row ${rowClass}">
                     <td>${index + 1}</td>
                     <td>${ticket.requestor}</td>
                     <td>${ticket.date}</td>
@@ -186,6 +200,7 @@
                     <td>${ticket.comments}</td>
                     <td>
                         <button class="edit-button" onclick="editTicket(${index})">Edit</button>
+                        <button class="complete-button" onclick="completeTicket(${index})">Complete</button>
                         <button class="delete-button" onclick="deleteTicket(${index})">Delete</button>
                     </td>
                 </tr>`;
@@ -218,6 +233,25 @@
 
             // Redirect to the request page with ticket data pre-filled
             window.location.href = 'request.html?edit=true';
+        }
+
+        // Function to mark a ticket as completed
+        function completeTicket(index) {
+            const selectedDate = document.getElementById('ticketDate').value;
+            const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
+
+            // Mark the ticket as completed
+            tickets = tickets.map((ticket, i) => {
+                if (i === index && ticket.date === selectedDate) {
+                    return { ...ticket, completed: true };
+                }
+                return ticket;
+            });
+
+            // Save the updated ticket list to localStorage
+            localStorage.setItem('tickets', JSON.stringify(tickets));
+
+            loadTickets(); // Reload the tickets to show the change
         }
 
         // Function to adjust the selected date by days (backwards or forwards)

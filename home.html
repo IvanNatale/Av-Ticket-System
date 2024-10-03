@@ -184,8 +184,10 @@
             const ticketBody = document.getElementById('ticketBody');
             ticketBody.innerHTML = ''; // Clear existing rows
 
+            // Filter tickets by the selected date
             const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
             filteredTickets.forEach((ticket, index) => {
+                const globalIndex = tickets.indexOf(ticket); // Get the index from the global ticket array
                 const rowClass = ticket.completed ? 'completed-row' : '';
                 const row = `<tr class="ticket-row ${rowClass}">
                     <td>${index + 1}</td>
@@ -199,9 +201,9 @@
                     <td>${ticket.workOrderNumber}</td>
                     <td>${ticket.comments}</td>
                     <td>
-                        <button class="edit-button" onclick="editTicket(${index})">Edit</button>
-                        <button class="complete-button" onclick="completeTicket(${index})">Complete</button>
-                        <button class="delete-button" onclick="deleteTicket(${index})">Delete</button>
+                        <button class="edit-button" onclick="editTicket(${globalIndex})">Edit</button>
+                        <button class="complete-button" onclick="completeTicket(${globalIndex})">Complete</button>
+                        <button class="delete-button" onclick="deleteTicket(${globalIndex})">Delete</button>
                     </td>
                 </tr>`;
                 ticketBody.insertAdjacentHTML('beforeend', row);
@@ -210,22 +212,14 @@
 
         // Function to delete a ticket
         function deleteTicket(index) {
-            const selectedDate = document.getElementById('ticketDate').value;
-            const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
-            const ticketToDelete = filteredTickets[index];
-
-            tickets = tickets.filter(ticket => !(ticket.date === ticketToDelete.date && ticket.workOrderNumber === ticketToDelete.workOrderNumber));
-
+            tickets.splice(index, 1); // Remove the ticket at the given index
             localStorage.setItem('tickets', JSON.stringify(tickets));
-
             loadTickets();
         }
 
         // Function to edit a ticket
         function editTicket(index) {
-            const selectedDate = document.getElementById('ticketDate').value;
-            const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
-            const ticketToEdit = filteredTickets[index];
+            const ticketToEdit = tickets[index];
 
             // Store the index and ticket data in localStorage
             localStorage.setItem('editIndex', index);
@@ -237,20 +231,8 @@
 
         // Function to mark a ticket as completed
         function completeTicket(index) {
-            const selectedDate = document.getElementById('ticketDate').value;
-            const filteredTickets = tickets.filter(ticket => ticket.date === selectedDate);
-
-            // Mark the ticket as completed
-            tickets = tickets.map((ticket, i) => {
-                if (i === index && ticket.date === selectedDate) {
-                    return { ...ticket, completed: true };
-                }
-                return ticket;
-            });
-
-            // Save the updated ticket list to localStorage
-            localStorage.setItem('tickets', JSON.stringify(tickets));
-
+            tickets[index].completed = true; // Mark the ticket as completed
+            localStorage.setItem('tickets', JSON.stringify(tickets)); // Save the updated ticket list
             loadTickets(); // Reload the tickets to show the change
         }
 
